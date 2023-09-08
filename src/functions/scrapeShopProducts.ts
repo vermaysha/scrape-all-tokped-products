@@ -34,7 +34,7 @@ export async function scrapeShopProducts() {
       console.info(`Scrawling produk dari ${shop.name} halaman ${page}...`)
       const url = new URL(`${shop.name}/product/page/${page}?sort=8`, "https://www.tokopedia.com");
       const res = await scrape.crawl(url.toString(), async (page: Page) => {
-        await page.waitForSelector('[data-testid="divProductWrapper"]', {
+        await page.waitForSelector('[data-testid="showCaseTitle"]', {
           timeout: 60_000
         })
         await page.evaluate(async () => {

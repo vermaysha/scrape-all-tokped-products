@@ -7,6 +7,10 @@ export async function exportProducts() {
     const keys = await storage.getKeys("scraped-products");
     const data = (await storage.getItems(keys)).map((item) => {
       const val = item.value as any;
+      if (!val) {
+        return null;
+      }
+
       return {
         url: val.url,
         thumbnail: val.thumbnail,
@@ -22,18 +26,18 @@ export async function exportProducts() {
         condition: val.condition,
         minPurchase: val.minPurchase,
         etalase: val.etalase,
-        description: val.description,
+        description: val.description.replace(/(\r\n|\r|\n)/g, '\\n'),
         shopUrl: val.shopUrl,
         shopName: val.shopName,
         shopRatingAvg: val.shopRatingAvg,
         shopLocation: val.shopLocation,
         reviewCount: val.reviewCount
       };
-    });
+    }).filter((n) => n && !!n.title && !!n.thumbnail);
     console.info(`${data.length} produk ditemukan !`)
 
     console.info('Mengexport ke file CSV ...')
-    const csv = stringify(data, { header: true });
+    const csv = stringify(data, { header: true, quoted: true });
     writeFileSync( filename, csv, { flag: "w+" });
     console.info(`Export berhasil disimpan dengan nama ${filename}.csv`);
 }

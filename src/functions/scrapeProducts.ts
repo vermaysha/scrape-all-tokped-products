@@ -22,10 +22,15 @@ export async function scrapeProducts() {
   });
 
   for (const product of products) {
+    if (product.link.includes('/promo/')) {
+      await storage.removeItem(`queue-products/${sha1(product.link)}`);
+      continue;
+    }
+
     const url = new URL(product.link, "https://www.tokopedia.com");
     const res = await scrape.crawl(url.toString(), async (page: Page) => {
-      await page.waitForSelector('[data-testid="lblPDPDetailProductName"]', {
-        timeout: 60_000
+      await page.waitForSelector('[data-testid="icnHeaderIcon"]', {
+        timeout: 60_000,
       });
       await page.evaluate(async () => {
         await new Promise<void>((resolve) => {
