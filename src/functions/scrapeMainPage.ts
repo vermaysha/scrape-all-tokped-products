@@ -12,9 +12,13 @@ export async function scrapeMainPage() {
   const res = await scrape.crawl(
     "https://www.tokopedia.com/",
     async (page: Page) => {
-      await page.waitForSelector('[data-testid="icnHeaderIcon"]', {
-        timeout: 60_000
-      })
+      try {
+        await page.waitForSelector('[data-testid="icnHeaderIcon"]', {
+          timeout: 60_000
+        })
+      } catch (error) {
+        // silent is gold
+      }
 
       let totalHeight = 0;
 

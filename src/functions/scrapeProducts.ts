@@ -29,9 +29,14 @@ export async function scrapeProducts() {
 
     const url = new URL(product.link, "https://www.tokopedia.com");
     const res = await scrape.crawl(url.toString(), async (page: Page) => {
-      await page.waitForSelector('[data-testid="icnHeaderIcon"]', {
-        timeout: 60_000,
-      });
+      try {
+        await page.waitForSelector('[data-testid="icnHeaderIcon"]', {
+          timeout: 60_000,
+        });
+      } catch (error) {
+        // silent is gold
+      }
+      
       await page.evaluate(async () => {
         await new Promise<void>((resolve) => {
           let totalHeight = 0;
@@ -48,10 +53,6 @@ export async function scrapeProducts() {
           }, 500);
         });
       });
-
-      // await page.waitForNavigation({
-      //   waitUntil: "networkidle2",
-      // });
     });
 
     if (!res) {
