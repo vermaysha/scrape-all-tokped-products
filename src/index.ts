@@ -10,12 +10,11 @@ async function main() {
   if (productsQueueTotals.length > 0) {
     // Scrape product
     console.info(`${productsQueueTotals.length} produk ditemukan, memulai scrapping`)
-    await scrapeProducts()
   } else {
     await scrapeMainPage();
     await scrapeShopProducts();
-    await scrapeProducts();
   }
+  await scrapeProducts();
 
   const shopsQueueTotals = await storage.getKeys('queue-shops')
 
