@@ -32,7 +32,6 @@ export class Scrape {
  async init(): Promise<void> {
     this.browser = await puppeteer.launch({
       headless: 'new',
-      userDataDir: resolve(process.cwd(), 'userData'),
     });
   }
 
